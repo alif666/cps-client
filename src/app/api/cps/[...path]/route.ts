@@ -1,4 +1,29 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
+
 const serviceUrl = process.env.CPS_API_URL ?? 'http://localhost:3000';
-async function proxy(request: NextRequest, { params }: { params: Promise<{ path: string[] }> }) { const { path } = await params; const token = request.cookies.get('cps_session')?.value; if (!token) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 }); const headers = new Headers(request.headers); headers.set('Authorization', `Bearer ${token}`); headers.delete('host'); const upstream = await fetch(`${serviceUrl}/api/v1/${path.join('/')}${request.nextUrl.search}`, { method: request.method, headers, body: ['GET', 'HEAD'].includes(request.method) ? undefined : await request.text(), cache: 'no-store' }); const body = await upstream.text(); return new NextResponse(body, { status: upstream.status, headers: { 'content-type': upstream.headers.get('content-type') ?? 'application/json' } }); }
-export const GET = proxy; export const POST = proxy; export const PATCH = proxy; export const PUT = proxy; export const DELETE = proxy;
+
+async function proxy(request: NextRequest, {params}: { params: Promise<{ path: string[] }> }) {
+    const {path} = await params;
+    const token = request.cookies.get('cps_session')?.value;
+    if (!token) return NextResponse.json({error: 'Not authenticated'}, {status: 401});
+    const headers = new Headers(request.headers);
+    headers.set('Authorization', `Bearer ${token}`);
+    headers.delete('host');
+    const upstream = await fetch(`${serviceUrl}/api/v1/${path.join('/')}${request.nextUrl.search}`, {
+        method: request.method,
+        headers,
+        body: ['GET', 'HEAD'].includes(request.method) ? undefined : await request.text(),
+        cache: 'no-store'
+    });
+    const body = await upstream.text();
+    return new NextResponse(body, {
+        status: upstream.status,
+        headers: {'content-type': upstream.headers.get('content-type') ?? 'application/json'}
+    });
+}
+
+export const GET = proxy;
+export const POST = proxy;
+export const PATCH = proxy;
+export const PUT = proxy;
+export const DELETE = proxy;

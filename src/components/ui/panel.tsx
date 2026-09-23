@@ -1,2 +1,9 @@
-export function Panel({ children, className = '' }: { children: React.ReactNode; className?: string }) { return <section className={`rounded-2xl border border-slate-200 bg-white shadow-panel ${className}`}>{children}</section>; }
-export function EmptyState({ title, description }: { title: string; description: string }) { return <div className="px-6 py-14 text-center"><p className="font-semibold text-ink">{title}</p><p className="mt-2 text-sm text-slate">{description}</p></div>; }
+export function Panel({children, className = ''}: { children: React.ReactNode; className?: string }) {
+    return <section
+        className={`rounded-2xl border border-slate-200 bg-white shadow-panel ${className}`}>{children}</section>;
+}
+
+export function EmptyState({title, description}: { title: string; description: string }) {
+    return <div className="px-6 py-14 text-center"><p className="font-semibold text-ink">{title}</p><p
+        className="mt-2 text-sm text-slate">{description}</p></div>;
+}

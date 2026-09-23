@@ -1,10 +1,77 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowUpRight, Building2, ClipboardCheck, FileCheck2, UsersRound } from 'lucide-react';
-import { useSession } from '@/lib/auth/session-context';
-import { can } from '@/lib/permissions';
-import { Panel } from '@/components/ui/panel';
+import {ArrowUpRight, Building2, ClipboardCheck, FileCheck2, UsersRound} from 'lucide-react';
+import {useSession} from '@/lib/auth/session-context';
+import {can} from '@/lib/permissions';
+import {Panel} from '@/components/ui/panel';
 
-const metrics = [{ label: 'Active organizations', value: '10', note: 'Across the group', tone: 'bg-brand-soft text-brand' }, { label: 'Open approvals', value: '24', note: 'Awaiting action', tone: 'bg-accent-soft text-amber-700' }, { label: 'RFQs in progress', value: '08', note: 'This procurement cycle', tone: 'bg-violet-50 text-violet-700' }, { label: 'Stock exceptions', value: '03', note: 'Needs attention', tone: 'bg-red-50 text-red-700' }];
-export default function DashboardPage() { const { user } = useSession(); return <div><div className="mb-9 flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">Tuesday, 22 September 2026</p><h2 className="mt-2 text-3xl font-semibold tracking-tight text-ink">Good morning, {user?.fullName?.split(' ')[0] ?? 'there'}.</h2><p className="mt-2 text-sm leading-6 text-slate">Here is the latest operational pulse across your procurement workspace.</p></div><div className="rounded-xl border border-brand/10 bg-brand-soft px-4 py-3 text-sm text-brand"><span className="font-semibold">Phase 1</span><span className="mx-2 text-brand/40">•</span>Indirect & CAPEX</div></div><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{metrics.map((metric) => <Panel key={metric.label} className="p-5"><div className="flex items-start justify-between"><p className="text-sm font-medium text-slate">{metric.label}</p><span className={`rounded-lg px-2 py-1 text-xs font-semibold ${metric.tone}`}>Live</span></div><p className="mt-6 text-3xl font-semibold tracking-tight text-ink">{metric.value}</p><p className="mt-1 text-xs text-slate">{metric.note}</p></Panel>)}</div><div className="mt-8 grid gap-6 xl:grid-cols-[1.4fr_0.8fr]"><Panel className="overflow-hidden"><div className="flex items-center justify-between border-b border-slate-100 px-6 py-5"><div><h3 className="font-semibold text-ink">Procurement journey</h3><p className="mt-1 text-sm text-slate">Your centralized flow at a glance.</p></div><Link href="/organizations" className="text-sm font-semibold text-brand hover:text-brand-dark">View setup <ArrowUpRight className="ml-1 inline h-4 w-4" /></Link></div><div className="grid gap-3 p-6 sm:grid-cols-4">{[['01', 'Demand', 'PRs received'], ['02', 'Sourcing', 'RFQs active'], ['03', 'Approval', 'POs queued'], ['04', 'Inventory', 'GRN & IQC']].map(([number, title, note]) => <div key={number} className="rounded-2xl bg-cloud p-4"><span className="text-xs font-bold text-brand">{number}</span><p className="mt-7 font-semibold text-ink">{title}</p><p className="mt-1 text-xs text-slate">{note}</p></div>)}</div></Panel><Panel className="p-6"><h3 className="font-semibold text-ink">Configuration shortcuts</h3><p className="mt-1 text-sm text-slate">Keep the foundation policy-ready.</p><div className="mt-5 space-y-2">{can(user, 'organization.manage') && <Link href="/organizations" className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 text-sm font-medium transition hover:border-brand/20 hover:bg-brand-soft"><Building2 className="h-4 w-4 text-brand" />Organization setup<ArrowUpRight className="ml-auto h-4 w-4 text-slate-400" /></Link>}{can(user, 'access.manage') && <Link href="/access/users" className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 text-sm font-medium transition hover:border-brand/20 hover:bg-brand-soft"><UsersRound className="h-4 w-4 text-brand" />Access management<ArrowUpRight className="ml-auto h-4 w-4 text-slate-400" /></Link>}{can(user, 'doa.manage') && <Link href="/doa-rules" className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 text-sm font-medium transition hover:border-brand/20 hover:bg-brand-soft"><ClipboardCheck className="h-4 w-4 text-brand" />DOA policies<ArrowUpRight className="ml-auto h-4 w-4 text-slate-400" /></Link>}<div className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 text-sm font-medium"><FileCheck2 className="h-4 w-4 text-slate-400" />UAT readiness<span className="ml-auto text-xs font-semibold text-amber-600">In progress</span></div></div></Panel></div></div>; }
+const metrics = [{
+    label: 'Active organizations',
+    value: '10',
+    note: 'Across the group',
+    tone: 'bg-brand-soft text-brand'
+}, {
+    label: 'Open approvals',
+    value: '24',
+    note: 'Awaiting action',
+    tone: 'bg-accent-soft text-amber-700'
+}, {
+    label: 'RFQs in progress',
+    value: '08',
+    note: 'This procurement cycle',
+    tone: 'bg-violet-50 text-violet-700'
+}, {label: 'Stock exceptions', value: '03', note: 'Needs attention', tone: 'bg-red-50 text-red-700'}];
+export default function DashboardPage() {
+    const {user} = useSession();
+    return <div>
+        <div className="mb-9 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div><p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">Tuesday, 22 September
+                2026</p><h2 className="mt-2 text-3xl font-semibold tracking-tight text-ink">Good
+                morning, {user?.fullName?.split(' ')[0] ?? 'there'}.</h2><p
+                className="mt-2 text-sm leading-6 text-slate">Here is the latest operational pulse across your
+                procurement workspace.</p></div>
+            <div className="rounded-xl border border-brand/10 bg-brand-soft px-4 py-3 text-sm text-brand"><span
+                className="font-semibold">Phase 1</span><span className="mx-2 text-brand/40">•</span>Indirect & CAPEX
+            </div>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{metrics.map((metric) => <Panel key={metric.label}
+                                                                                                  className="p-5">
+            <div className="flex items-start justify-between"><p
+                className="text-sm font-medium text-slate">{metric.label}</p><span
+                className={`rounded-lg px-2 py-1 text-xs font-semibold ${metric.tone}`}>Live</span></div>
+            <p className="mt-6 text-3xl font-semibold tracking-tight text-ink">{metric.value}</p><p
+            className="mt-1 text-xs text-slate">{metric.note}</p></Panel>)}</div>
+        <div className="mt-8 grid gap-6 xl:grid-cols-[1.4fr_0.8fr]"><Panel className="overflow-hidden">
+            <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+                <div><h3 className="font-semibold text-ink">Procurement journey</h3><p
+                    className="mt-1 text-sm text-slate">Your centralized flow at a glance.</p></div>
+                <Link href="/organizations" className="text-sm font-semibold text-brand hover:text-brand-dark">View
+                    setup <ArrowUpRight className="ml-1 inline h-4 w-4"/></Link></div>
+            <div
+                className="grid gap-3 p-6 sm:grid-cols-4">{[['01', 'Demand', 'PRs received'], ['02', 'Sourcing', 'RFQs active'], ['03', 'Approval', 'POs queued'], ['04', 'Inventory', 'GRN & IQC']].map(([number, title, note]) =>
+                <div key={number} className="rounded-2xl bg-cloud p-4"><span
+                    className="text-xs font-bold text-brand">{number}</span><p
+                    className="mt-7 font-semibold text-ink">{title}</p><p className="mt-1 text-xs text-slate">{note}</p>
+                </div>)}</div>
+        </Panel><Panel className="p-6"><h3 className="font-semibold text-ink">Configuration shortcuts</h3><p
+            className="mt-1 text-sm text-slate">Keep the foundation policy-ready.</p>
+            <div className="mt-5 space-y-2">{can(user, 'organization.manage') && <Link href="/organizations"
+                                                                                       className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 text-sm font-medium transition hover:border-brand/20 hover:bg-brand-soft"><Building2
+                className="h-4 w-4 text-brand"/>Organization setup<ArrowUpRight
+                className="ml-auto h-4 w-4 text-slate-400"/></Link>}{can(user, 'access.manage') &&
+                <Link href="/access/users"
+                      className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 text-sm font-medium transition hover:border-brand/20 hover:bg-brand-soft"><UsersRound
+                    className="h-4 w-4 text-brand"/>Access management<ArrowUpRight
+                    className="ml-auto h-4 w-4 text-slate-400"/></Link>}{can(user, 'doa.manage') &&
+                <Link href="/doa-rules"
+                      className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 text-sm font-medium transition hover:border-brand/20 hover:bg-brand-soft"><ClipboardCheck
+                    className="h-4 w-4 text-brand"/>DOA policies<ArrowUpRight
+                    className="ml-auto h-4 w-4 text-slate-400"/></Link>}
+                <div className="flex items-center gap-3 rounded-xl border border-slate-100 p-3 text-sm font-medium">
+                    <FileCheck2 className="h-4 w-4 text-slate-400"/>UAT readiness<span
+                    className="ml-auto text-xs font-semibold text-amber-600">In progress</span></div>
+            </div>
+        </Panel></div>
+    </div>;
+}
